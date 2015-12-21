@@ -2,7 +2,9 @@
 #include <list>
 #include <cmath>
 
-
+/*
+ Some vector functions
+*/
 float length(sf::Vector2f &v){
     return std::sqrt(v.x*v.x + v.y*v.y);
 }
@@ -15,23 +17,26 @@ sf::Vector2f fromPolar(float length, float angle){
     return sf::Vector2f(length*std::cos(angle), length*std::sin(angle));
 }
 
+// Set origin to center
 void centerTextOrigin(sf::Text &text){
     sf::FloatRect textRect = text.getLocalBounds();
     text.setOrigin(textRect.left + textRect.width / 2.0f,
         textRect.top + textRect.height / 2.0f);
 }
 
+/*
+ Här börjar main!
+*/
 int main()
 {
     const int SCREEN_HEIGHT = 200;
-    const int SCREEN_WIDTH = SCREEN_HEIGHT * 1.8;
-    const float BALL_SIZE = 10;
+    const int SCREEN_WIDTH = (int) (SCREEN_HEIGHT * 1.8);
+    const float BALL_SIZE = 10.f;
     const int PADDLE_LENGTH = 50;
     const int PADDLE_THICKNESS = 10;
     const int PADDLE_OFFSET = 10;
     const float PADDLE_SPEED = 3.0f;
-
-    const float INITIAL_BALL_SPEED = 4;
+    const float INITIAL_BALL_SPEED = 4.f;
 
     sf::Color table_color(0, 102, 51);
     sf::VideoMode video_mode(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -44,25 +49,25 @@ int main()
 
     sf::Vector2f ball_speed(0, 0);
 
-    sf::RectangleShape p1_paddle(sf::Vector2f(PADDLE_THICKNESS, PADDLE_LENGTH));
+    sf::RectangleShape p1_paddle(sf::Vector2f((float) PADDLE_THICKNESS, (float) PADDLE_LENGTH));
     p1_paddle.setOrigin(sf::Vector2f(PADDLE_THICKNESS / 2, PADDLE_LENGTH / 2));
     p1_paddle.setFillColor(sf::Color::White);
-    p1_paddle.setPosition(PADDLE_OFFSET, 3 * SCREEN_HEIGHT / 4);
+    p1_paddle.setPosition((float) PADDLE_OFFSET, 3 * SCREEN_HEIGHT / 4);
 
-    sf::RectangleShape p2_paddle(sf::Vector2f(PADDLE_THICKNESS, PADDLE_LENGTH));
+    sf::RectangleShape p2_paddle(sf::Vector2f((float) PADDLE_THICKNESS, (float) PADDLE_LENGTH));
     p2_paddle.setOrigin(sf::Vector2f(PADDLE_THICKNESS / 2, PADDLE_LENGTH / 2));
     p2_paddle.setFillColor(sf::Color::White);
     p2_paddle.setPosition(SCREEN_WIDTH - PADDLE_OFFSET, SCREEN_HEIGHT / 4);
 
-    sf::RectangleShape field_boundary(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
+    sf::RectangleShape field_boundary(sf::Vector2f((float)SCREEN_WIDTH, (float)SCREEN_HEIGHT));
     field_boundary.setOutlineColor(sf::Color::White);
     field_boundary.setOutlineThickness(-4.0);
     field_boundary.setFillColor(sf::Color::Transparent);
 
-    sf::RectangleShape field_net(sf::Vector2f(4, SCREEN_HEIGHT));
+    sf::RectangleShape field_net(sf::Vector2f(4, (float) SCREEN_HEIGHT));
     field_net.setPosition(sf::Vector2f(SCREEN_WIDTH / 2 - 2, 0));
     field_net.setFillColor(sf::Color::Black);
-    sf::RectangleShape field_center_line(sf::Vector2f(SCREEN_WIDTH, 1));
+    sf::RectangleShape field_center_line(sf::Vector2f((float) SCREEN_WIDTH, 1));
     field_center_line.setPosition(sf::Vector2f(0, SCREEN_HEIGHT / 2 - 0.5));
 
     std::list<sf::Drawable *> draw_list;
@@ -163,12 +168,12 @@ int main()
             if (ball_speed.x > 0 && ball.getGlobalBounds().intersects(p2_paddle.getGlobalBounds())) {
                 float y_diff = -ball.getPosition().y + p2_paddle.getPosition().y;
                 float angle = std::atan(y_diff / (PADDLE_LENGTH / 2));
-                ball_speed = fromPolar(length(ball_speed) * 1.05, angle + 3.14159);
+                ball_speed = fromPolar(length(ball_speed) * 1.05f, angle + 3.14159f);
             }
             if (ball_speed.x < 0 && ball.getGlobalBounds().intersects(p1_paddle.getGlobalBounds())) {
                 float y_diff = ball.getPosition().y - p1_paddle.getPosition().y;
                 float angle = std::atan(y_diff / (PADDLE_LENGTH / 2));
-                ball_speed = fromPolar(length(ball_speed) * 1.05, angle);
+                ball_speed = fromPolar(length(ball_speed) * 1.05f, angle);
             }
             if (ball.getPosition().x < -10){
                 p2_points++;
