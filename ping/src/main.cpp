@@ -8,7 +8,7 @@ float length(sf::Vector2f &v){
 }
 
 void set_length(sf::Vector2f &v, float new_length){
-    v = v/length(v) * new_length;
+    v = v / length(v) * new_length;
 }
 
 sf::Vector2f fromPolar(float length, float angle){
@@ -18,7 +18,7 @@ sf::Vector2f fromPolar(float length, float angle){
 void centerTextOrigin(sf::Text &text){
     sf::FloatRect textRect = text.getLocalBounds();
     text.setOrigin(textRect.left + textRect.width / 2.0f,
-                   textRect.top + textRect.height / 2.0f);
+        textRect.top + textRect.height / 2.0f);
 }
 
 int main()
@@ -35,7 +35,7 @@ int main()
 
     sf::Color table_color(0, 102, 51);
     sf::VideoMode video_mode(SCREEN_WIDTH, SCREEN_HEIGHT);
-    
+
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Ping!");
     window.setVerticalSyncEnabled(true);
     sf::RectangleShape ball(sf::Vector2f(BALL_SIZE, BALL_SIZE));
@@ -47,7 +47,7 @@ int main()
     sf::RectangleShape p1_paddle(sf::Vector2f(PADDLE_THICKNESS, PADDLE_LENGTH));
     p1_paddle.setOrigin(sf::Vector2f(PADDLE_THICKNESS / 2, PADDLE_LENGTH / 2));
     p1_paddle.setFillColor(sf::Color::White);
-    p1_paddle.setPosition(PADDLE_OFFSET, 3*SCREEN_HEIGHT / 4);
+    p1_paddle.setPosition(PADDLE_OFFSET, 3 * SCREEN_HEIGHT / 4);
 
     sf::RectangleShape p2_paddle(sf::Vector2f(PADDLE_THICKNESS, PADDLE_LENGTH));
     p2_paddle.setOrigin(sf::Vector2f(PADDLE_THICKNESS / 2, PADDLE_LENGTH / 2));
@@ -129,7 +129,7 @@ int main()
                 state = SERVE;
                 while (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
                     sf::sleep(sf::milliseconds(10));
-                
+
             }
         }
         else if (state == SERVE) {
@@ -207,13 +207,9 @@ int main()
                     sf::sleep(sf::milliseconds(10));
 
             }
-           
         }
 
-
         window.clear(table_color);
-
-       // window.draw(ball);
         for (sf::Drawable *s : draw_list){
             window.draw(*s);
         }
