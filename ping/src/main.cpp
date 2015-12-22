@@ -1,6 +1,11 @@
+/*
+ Anton Olason, 2015-12-22
+*/
+
 #include <SFML/Graphics.hpp>
 #include <list>
 #include <cmath>
+#include <fstream>
 
 /*
  Some vector functions
@@ -29,6 +34,10 @@ void centerTextOrigin(sf::Text &text){
 */
 int main()
 {
+    // Redirect to a file
+    std::ofstream file("stderr.log");
+    std::streambuf* previous = sf::err().rdbuf(file.rdbuf());
+
     const int SCREEN_HEIGHT = 200;
     const int SCREEN_WIDTH = (int) (SCREEN_HEIGHT * 1.8);
     const float BALL_SIZE = 10.f;
@@ -39,10 +48,10 @@ int main()
     const float INITIAL_BALL_SPEED = 4.f;
 
     sf::Color table_color(0, 102, 51);
-    sf::VideoMode video_mode(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Ping!");
     window.setVerticalSyncEnabled(true);
+
     sf::RectangleShape ball(sf::Vector2f(BALL_SIZE, BALL_SIZE));
     ball.setOrigin(sf::Vector2f(BALL_SIZE / 2, BALL_SIZE / 2));
     ball.setFillColor(sf::Color::White);
@@ -67,6 +76,7 @@ int main()
     sf::RectangleShape field_net(sf::Vector2f(4, (float) SCREEN_HEIGHT));
     field_net.setPosition(sf::Vector2f(SCREEN_WIDTH / 2 - 2, 0));
     field_net.setFillColor(sf::Color::Black);
+
     sf::RectangleShape field_center_line(sf::Vector2f((float) SCREEN_WIDTH, 1));
     field_center_line.setPosition(sf::Vector2f(0, SCREEN_HEIGHT / 2 - 0.5));
 
@@ -78,9 +88,7 @@ int main()
     draw_list.push_back(&field_boundary);
     draw_list.push_back(&field_center_line);
     draw_list.push_back(&field_net);
-    enum State { START, SERVE, PLAYING, GAME_END };
 
-    State state = START;
     int p1_points = 0;
     int p2_points = 0;
 
@@ -105,9 +113,10 @@ int main()
     draw_list.push_back(&p1_score_text);
     draw_list.push_back(&p2_score_text);
     draw_list.push_back(&end_text);
-
-    std::list<sf::Drawable *> start_draw_list;
-
+    
+    enum State { START, SERVE, PLAYING, GAME_END };
+    State state = START;
+    // game loop
     while (window.isOpen())
     {
         if (!window.hasFocus()){
@@ -121,8 +130,7 @@ int main()
                 window.close();
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-            window.close();
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) window.close();
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) p2_paddle.move(-sf::Vector2f(0, PADDLE_SPEED));
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) p2_paddle.move(sf::Vector2f(0, PADDLE_SPEED));
@@ -134,7 +142,6 @@ int main()
                 state = SERVE;
                 while (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
                     sf::sleep(sf::milliseconds(10));
-
             }
         }
         else if (state == SERVE) {
@@ -175,13 +182,13 @@ int main()
                 float angle = std::atan(y_diff / (PADDLE_LENGTH / 2));
                 ball_speed = fromPolar(length(ball_speed) * 1.05f, angle);
             }
-            if (ball.getPosition().x < -10){
+            if (ball.getPosition().x < -BALL_SIZE){
                 p2_points++;
                 state = SERVE;
                 p2_score_text.setString(std::to_string(p2_points));
                 centerTextOrigin(p2_score_text);
             }
-            if (ball.getPosition().x > SCREEN_WIDTH + 10){
+            if (ball.getPosition().x > SCREEN_WIDTH + BALL_SIZE){
                 p1_points++;
                 state = SERVE;
                 p1_score_text.setString(std::to_string(p1_points));
@@ -210,22 +217,13 @@ int main()
                 centerTextOrigin(p2_score_text);
                 while (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
                     sf::sleep(sf::milliseconds(10));
-
             }
         }
-
         window.clear(table_color);
         for (sf::Drawable *s : draw_list){
             window.draw(*s);
         }
-        if (state == START){
-            for (sf::Drawable *s : start_draw_list){
-                window.draw(*s);
-            }
-        }
         window.display();
     }
-
     return 0;
 }
-
