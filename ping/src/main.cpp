@@ -81,13 +81,13 @@ int main()
     field_center_line.setPosition(sf::Vector2f(0, SCREEN_HEIGHT / 2 - 0.5));
 
     std::list<sf::Drawable *> draw_list;
-    draw_list.push_back(&ball);
-    draw_list.push_back(&p1_paddle);
-    draw_list.push_back(&p2_paddle);
-
     draw_list.push_back(&field_boundary);
     draw_list.push_back(&field_center_line);
     draw_list.push_back(&field_net);
+
+    draw_list.push_back(&ball);
+    draw_list.push_back(&p1_paddle);
+    draw_list.push_back(&p2_paddle);
 
     int p1_points = 0;
     int p2_points = 0;
