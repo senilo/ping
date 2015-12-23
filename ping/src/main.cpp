@@ -92,12 +92,10 @@ int main()
     int p1_points = 0;
     int p2_points = 0;
 
-    sf::err() << "Här är stderr!" << std::endl;
     sf::Font font;
-    if (!font.loadFromFile("arialbd.ttf")){
-        sf::err() << "Could not open 'arialbd.ttf'" << std::endl;
+    if (!font.loadFromFile("freefont/FreeSansBold.ttf")){
+        sf::err() << "Could not open 'freefont/FreeSansBold.ttf'" << std::endl;
     }
-
     sf::Text p1_score_text("0", font);
     p1_score_text.setPosition(SCREEN_WIDTH / 3, SCREEN_HEIGHT / 4);
     p1_score_text.setColor(sf::Color::White);
